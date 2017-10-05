@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "declaration": false,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "lib": ["dom", "dom.iterable", "es2015"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "target": "es5"
+    },
+    "include": [
+        "./**/*.ts"
+    ],
+    "exclude": [
+        "./node_modules/**",
+        "./**/*.d.ts"
+    ]
+}
