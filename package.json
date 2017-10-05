@@ -1,0 +1,52 @@
+{
+  "name": "broilerpan",
+  "version": "0.0.0",
+  "description": "Command line utility for Broilerplate, enabling easy deployment and set up of scalable web apps to AWS cloud.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=8.2"
+  },
+  "bin": {
+    "broil": "./broil.js"
+  },
+  "scripts": {
+    "build": "npm run compile",
+    "clean": "find . -type d \\( -path ./node_modules -o -path ./types \\) -prune -o -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' \\) -exec rm {} \\;",
+    "clean-build": "npm run clean && npm run compile",
+    "compile": "tsc -p . && chmod +x ./broil.js",
+    "prepare": "npm run clean-build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ktkiiski/broilerpan.git"
+  },
+  "keywords": [
+    "broilerplate",
+    "boilerplate",
+    "broilerkit",
+    "deployment",
+    "aws"
+  ],
+  "author": {
+    "name": "Kimmo Kiiski",
+    "email": "kimmo@kii.ski",
+    "url": "https://kii.ski"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ktkiiski/broilerpan/issues"
+  },
+  "homepage": "https://github.com/ktkiiski/broilerpan#readme",
+  "dependencies": {
+    "@types/chalk": "^0.4.31",
+    "@types/semver": "^5.3.33",
+    "@types/yargs": "^8.0.2",
+    "chalk": "^2.0.1",
+    "semver": "^5.4.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2",
+    "yargs": "^8.0.2"
+  }
+}
