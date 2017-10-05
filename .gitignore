@@ -1,0 +1,13 @@
+# Ignore compiled scripts
+*.js
+*.js.map
+*.d.ts
+
+# Ignore npm installed packages
+/node_modules
+
+# Ignore npm debug log file
+/npm-debug.log
+
+# Ignore OS X hidden files
+.DS_Store
