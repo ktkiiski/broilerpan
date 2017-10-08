@@ -43,6 +43,7 @@
     "chalk": "^2.0.1",
     "semver": "^5.4.1",
     "ts-node": "^3.3.0",
+    "tslib": "^1.7.1",
     "typescript": "^2.4.2",
     "yargs": "^8.0.2"
   },
@@ -50,7 +51,6 @@
     "@types/chalk": "^0.4.31",
     "@types/node": "^8.0.32",
     "@types/semver": "^5.4.0",
-    "@types/yargs": "^8.0.2",
-    "tslib": "^1.7.1"
+    "@types/yargs": "^8.0.2"
   }
 }
