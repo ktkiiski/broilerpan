@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "npm run compile",
-    "clean": "find . -type d \\( -path ./node_modules -o -path ./types \\) -prune -o -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' \\) -exec rm {} \\;",
+    "clean": "find . -type d -path ./node_modules -prune -o -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' \\) -exec rm {} \\;",
     "clean-build": "npm run clean && npm run compile",
     "compile": "tsc -p . && chmod +x ./broil.js",
     "prepare": "npm run clean-build",
