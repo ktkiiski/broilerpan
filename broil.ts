@@ -1,9 +1,10 @@
 #! /usr/bin/env node
 import { red } from 'chalk';
+import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as yargs from 'yargs';
 import { ICommandOptions, readConfig } from './config';
-import { escapeForShell, execute } from './exec';
+import { escapeForShell } from './exec';
 
 // Allow loading TypeScript (.ts) files using `require()` commands
 import 'ts-node/register';
@@ -40,14 +41,20 @@ yargs
 
     /**** Commands ****/
     .command({
-        command: 'init [branch]',
+        command: 'init [directory]',
         aliases: ['update', 'pull'],
-        builder: (cmdYargs) => cmdYargs.default('branch', 'master'),
+        builder: (cmdYargs) => cmdYargs
+            .default('directory', process.cwd())
+            .normalize('directory')
+            .describe('template', 'Name of the Broilerplate branch to apply.')
+            .default('template', 'master')
+        ,
         describe: 'Initializes/updates your project to use the Broilerplate template.',
-        handler: ({branch}: {branch: string}) => {
-            execute(`git pull https://github.com/ktkiiski/broilerplate.git ${escapeForShell(branch)} --allow-unrelated-histories`)
-                .then(null, errorHandler.error)
-            ;
+        handler: ({template, directory}: {template: string, directory: string}) => {
+            const options: childProcess.ExecSyncOptions = {cwd: directory, stdio: 'inherit'};
+            childProcess.execSync(`git init ${escapeForShell(directory)}`, options);
+            childProcess.execSync(`git pull https://github.com/ktkiiski/broilerplate.git ${escapeForShell(template)} --allow-unrelated-histories`, options);
+            childProcess.execSync(`npm install`, options);
         },
     })
     .command({
