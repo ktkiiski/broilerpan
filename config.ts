@@ -15,7 +15,7 @@ export function readConfig(options: ICommandOptions): any {
     const stageConfig = stages[stage];
     const buildDir = path.join('./.broiler/build', stage || 'local');
     const stackName = `${siteConfig.name}-${stage}`;
-    const config = {
+    return {
         ...siteConfig,
         ...stageConfig,
         debug,
@@ -23,13 +23,5 @@ export function readConfig(options: ICommandOptions): any {
         buildDir,
         stage,
         stackName,
-    };
-    // No api defined?
-    if (!config.apiPath) {
-        return config;
-    }
-    return {
-        ...config,
-        api: require(path.resolve(projectRoot, config.apiPath)),
     };
 }
