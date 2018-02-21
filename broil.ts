@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { red } from 'chalk';
+import chalk from 'chalk';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as yargs from 'yargs';
@@ -12,7 +12,7 @@ import 'ts-node/register';
 const onError = (error: Error) => {
     process.exitCode = 1;
     // tslint:disable-next-line:no-console
-    console.error(red(String(error.stack || error)));
+    console.error(chalk.red(String(error.stack || error)));
 };
 const errorHandler = {
     error: onError,
