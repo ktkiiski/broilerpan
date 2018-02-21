@@ -9,12 +9,13 @@ import { escapeForShell } from './exec';
 // Allow loading TypeScript (.ts) files using `require()` commands
 import 'ts-node/register';
 
+const onError = (error: Error) => {
+    process.exitCode = 1;
+    // tslint:disable-next-line:no-console
+    console.error(red(String(error.stack || error)));
+};
 const errorHandler = {
-    error: (error: Error) => {
-        process.exitCode = 1;
-        // tslint:disable-next-line:no-console
-        console.error(red(String(error.stack || error)));
-    },
+    error: onError,
 };
 
 function getBroiler(config: any): any {
@@ -67,7 +68,11 @@ yargs
         handler: (argv: ICommandOptions & {init: boolean}) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            (argv.init ? broiler.initialize$() : broiler.deploy$()).subscribe(errorHandler);
+            if ('initialize$' in broiler) {
+                (argv.init ? broiler.initialize$() : broiler.deploy$()).subscribe(errorHandler);
+            } else {
+                (argv.init ? broiler.initialize() : broiler.deploy()).then(null, onError);
+            }
         },
     })
     .command({
@@ -76,7 +81,11 @@ yargs
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            broiler.undeploy$().subscribe(errorHandler);
+            if ('undeploy$' in broiler) {
+                broiler.undeploy$().subscribe(errorHandler);
+            } else {
+                broiler.undeploy().then(null, onError);
+            }
         },
     })
     .command({
@@ -86,7 +95,11 @@ yargs
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            broiler.compile$().subscribe(errorHandler);
+            if ('compile$' in broiler) {
+                broiler.compile$().subscribe(errorHandler);
+            } else {
+                broiler.compile().then(null, onError);
+            }
         },
     })
     .command({
@@ -95,7 +108,11 @@ yargs
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            broiler.preview$().subscribe(errorHandler);
+            if ('preview$' in broiler) {
+                broiler.preview$().subscribe(errorHandler);
+            } else {
+                broiler.preview().then(null, onError);
+            }
         },
     })
     .command({
@@ -104,7 +121,11 @@ yargs
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            broiler.printStack$().subscribe(errorHandler);
+            if ('printStack$' in broiler) {
+                broiler.printStack$().subscribe(errorHandler);
+            } else {
+                broiler.printStack().then(null, onError);
+            }
         },
     })
     .command({
@@ -114,7 +135,11 @@ yargs
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
-            broiler.serve$().subscribe(errorHandler);
+            if ('serve$' in broiler) {
+                broiler.serve$().subscribe(errorHandler);
+            } else {
+                broiler.serve().then(null, onError);
+            }
         },
     })
     .demandCommand(1)
