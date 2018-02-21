@@ -9,6 +9,9 @@ import { escapeForShell } from './exec';
 // Allow loading TypeScript (.ts) files using `require()` commands
 import 'ts-node/register';
 
+// Polyfill Symbol.asyncIterator
+(Symbol as any).asyncIterator = (Symbol as any).asyncIterator || Symbol.for('Symbol.asyncIterator');
+
 const onError = (error: Error) => {
     process.exitCode = 1;
     // tslint:disable-next-line:no-console
