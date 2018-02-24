@@ -92,6 +92,26 @@ yargs
         },
     })
     .command({
+        command: 'logs <stage> [since]',
+        describe: 'Print app logs for the given stage.',
+        builder: (cmdYargs) => cmdYargs
+            .boolean('f')
+            .describe('f', 'Wait for additional logs and print them')
+            .describe('since', 'How old logs should be printed, e.g. 1min, 2h, 3d')
+            .number('n')
+            .describe('n', 'Number of log entries to print')
+        ,
+        handler: (argv: ICommandOptions & {f: boolean, since: string, n: number}) => {
+            const config = readConfig(argv);
+            const broiler = getBroiler(config);
+            broiler.printLogs({
+                follow: argv.f,
+                since: argv.since,
+                maxCount: argv.n,
+            }).then(null, onError);
+        },
+    })
+    .command({
         command: 'compile <stage>',
         aliases: ['build'],
         describe: 'Compile the web app for the given stage.',
