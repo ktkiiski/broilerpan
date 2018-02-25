@@ -41,6 +41,28 @@ Install the command line utility:
 npm i -g broilerpan
 ```
 
+After this you can use the `broil` command. To get the overview of the available commands, run `broil help`:
+
+```
+$ broil help
+Commands:
+  init [directory]      Bootstrap your project with Broilerplate template.           [aliases: pull]
+  deploy <stage>        Deploy the web app for the given stage.
+  undeploy <stage>      Deletes the previously deployed web app.
+  logs <stage> [since]  Print app logs.
+  compile <stage>       Compile the web app.                                        [aliases: build]
+  preview <stage>       Preview the changes that would be deployed.
+  describe <stage>      Describes the deployed resources.
+  serve [stage]         Run the local development server.
+
+Options:
+  --appConfigPath  Path to the app configuration                 [string] [default: "app.config.ts"]
+  --debug          Compile assets for debugging                                            [boolean]
+  --no-color       Print output without colors                                             [boolean]
+  --help           Show help                                                               [boolean]
+  --version        Show version number                                                     [boolean]
+```
+
 ## Creating a web app
 
 You can easily bootstrap a new web app:

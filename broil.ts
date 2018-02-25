@@ -33,8 +33,7 @@ function getBroiler(config: any): any {
 yargs
     // Read the app configuration
     .describe('appConfigPath', 'Path to the app configuration')
-    .default('appConfigPath', './app.config.ts')
-    .alias('appConfigPath', 'appConfig')
+    .default('appConfigPath', 'app.config.ts')
     .normalize('appConfigPath')
 
     .boolean('debug')
@@ -46,14 +45,14 @@ yargs
     /**** Commands ****/
     .command({
         command: 'init [directory]',
-        aliases: ['update', 'pull'],
+        aliases: ['pull'],
         builder: (cmdYargs) => cmdYargs
-            .default('directory', process.cwd())
+            .default('directory', './')
             .normalize('directory')
             .describe('template', 'Name of the Broilerplate branch to apply.')
             .default('template', 'master')
         ,
-        describe: 'Initializes/updates your project to use the Broilerplate template.',
+        describe: 'Bootstrap your project with Broilerplate template.',
         handler: ({template, directory}: {template: string, directory: string}) => {
             const options: childProcess.ExecSyncOptions = {cwd: directory, stdio: 'inherit'};
             childProcess.execSync(`git init ${escapeForShell(directory)}`, options);
@@ -66,7 +65,7 @@ yargs
         describe: 'Deploy the web app for the given stage.',
         builder: (cmdYargs) => cmdYargs
             .boolean('init')
-            .describe('init', 'Just create a stack without deploying')
+            .describe('init', 'Just create the stack (no deployment)')
         ,
         handler: (argv: ICommandOptions & {init: boolean}) => {
             const config = readConfig(argv);
@@ -80,7 +79,7 @@ yargs
     })
     .command({
         command: 'undeploy <stage>',
-        describe: 'Deletes the previously deployed web app for the given stage.',
+        describe: 'Deletes the previously deployed web app.',
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
@@ -93,7 +92,7 @@ yargs
     })
     .command({
         command: 'logs <stage> [since]',
-        describe: 'Print app logs for the given stage.',
+        describe: 'Print app logs.',
         builder: (cmdYargs) => cmdYargs
             .boolean('f')
             .describe('f', 'Wait for additional logs and print them')
@@ -114,7 +113,7 @@ yargs
     .command({
         command: 'compile <stage>',
         aliases: ['build'],
-        describe: 'Compile the web app for the given stage.',
+        describe: 'Compile the web app.',
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
@@ -127,7 +126,7 @@ yargs
     })
     .command({
         command: 'preview <stage>',
-        describe: 'Preview the changes that would be deployed without actually deploying them.',
+        describe: 'Preview the changes that would be deployed.',
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
@@ -140,7 +139,7 @@ yargs
     })
     .command({
         command: 'describe <stage>',
-        describe: 'Describes the deployed resources of the given stage.',
+        describe: 'Describes the deployed resources.',
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
             const broiler = getBroiler(config);
@@ -153,7 +152,7 @@ yargs
     })
     .command({
         command: 'serve [stage]',
-        describe: 'Run the local development server',
+        describe: 'Run the local development server.',
         builder: (cmdYargs) => cmdYargs.default('stage', 'local'),
         handler: (argv: ICommandOptions) => {
             const config = readConfig(argv);
@@ -166,7 +165,7 @@ yargs
         },
     })
     .demandCommand(1)
-    .wrap(Math.min(yargs.terminalWidth(), 140))
+    .wrap(Math.min(yargs.terminalWidth(), 100))
     .help()
     .version()
     .argv
