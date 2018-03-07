@@ -12,6 +12,7 @@
             true,
             "single"
         ],
+        "interface-name": false,
         "no-bitwise": false,
         "no-require-imports": false,
         "no-var-requires": false,

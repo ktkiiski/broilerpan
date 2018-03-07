@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as yargs from 'yargs';
-import { ICommandOptions, readConfig } from './config';
 import { escapeForShell } from './exec';
 
 // Allow loading TypeScript (.ts) files using `require()` commands
@@ -17,16 +16,24 @@ const onError = (error: Error) => {
     // tslint:disable-next-line:no-console
     console.error(chalk.red(String(error.stack || error)));
 };
-const errorHandler = {
-    error: onError,
-};
 
-function getBroiler(config: any): any {
-    const projectRoot = process.cwd();
-    const broilerModulePath = path.resolve(projectRoot, './node_modules/broilerkit/broiler');
+interface CommandOptions {
+    appConfigPath: string;
+    stage: string;
+    debug: boolean;
+}
+
+function getBroiler(argv: CommandOptions): any {
+    const { appConfigPath, ...options } = argv;
+    const cwd = process.cwd();
+    const appPath = path.resolve(cwd, appConfigPath);
+    const projectRootPath = path.dirname(appPath);
+    const appModule = require(appPath);
+    const app = appModule.default; // App should be the default export
+    const broilerModulePath = path.resolve(projectRootPath, './node_modules/broilerkit/broiler');
     const broilerModule = require(broilerModulePath);
     const Broiler = broilerModule.Broiler;
-    return new Broiler(config);
+    return new Broiler(app.configure({...options, projectRootPath}));
 }
 
 // tslint:disable-next-line:no-unused-expression
@@ -67,27 +74,21 @@ yargs
             .boolean('init')
             .describe('init', 'Just create the stack (no deployment)')
         ,
-        handler: (argv: ICommandOptions & {init: boolean}) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('initialize$' in broiler) {
-                (argv.init ? broiler.initialize$() : broiler.deploy$()).subscribe(errorHandler);
+        handler: (argv: CommandOptions & {init: boolean}) => {
+            const broiler = getBroiler(argv);
+            if (argv.init) {
+                broiler.initialize().then(null, onError);
             } else {
-                (argv.init ? broiler.initialize() : broiler.deploy()).then(null, onError);
+                broiler.deploy().then(null, onError);
             }
         },
     })
     .command({
         command: 'undeploy <stage>',
         describe: 'Deletes the previously deployed web app.',
-        handler: (argv: ICommandOptions) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('undeploy$' in broiler) {
-                broiler.undeploy$().subscribe(errorHandler);
-            } else {
-                broiler.undeploy().then(null, onError);
-            }
+        handler: (argv: CommandOptions) => {
+            const broiler = getBroiler(argv);
+            broiler.undeploy().then(null, onError);
         },
     })
     .command({
@@ -100,9 +101,8 @@ yargs
             .number('n')
             .describe('n', 'Number of log entries to print')
         ,
-        handler: (argv: ICommandOptions & {f: boolean, since: string, n: number}) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
+        handler: (argv: CommandOptions & {f: boolean, since: string, n: number}) => {
+            const broiler = getBroiler(argv);
             broiler.printLogs({
                 follow: argv.f,
                 since: argv.since,
@@ -114,54 +114,34 @@ yargs
         command: 'compile <stage>',
         aliases: ['build'],
         describe: 'Compile the web app.',
-        handler: (argv: ICommandOptions) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('compile$' in broiler) {
-                broiler.compile$().subscribe(errorHandler);
-            } else {
-                broiler.compile().then(null, onError);
-            }
+        handler: (argv: CommandOptions) => {
+            const broiler = getBroiler(argv);
+            broiler.compile().then(null, onError);
         },
     })
     .command({
         command: 'preview <stage>',
         describe: 'Preview the changes that would be deployed.',
-        handler: (argv: ICommandOptions) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('preview$' in broiler) {
-                broiler.preview$().subscribe(errorHandler);
-            } else {
-                broiler.preview().then(null, onError);
-            }
+        handler: (argv: CommandOptions) => {
+            const broiler = getBroiler(argv);
+            broiler.preview().then(null, onError);
         },
     })
     .command({
         command: 'describe <stage>',
         describe: 'Describes the deployed resources.',
-        handler: (argv: ICommandOptions) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('printStack$' in broiler) {
-                broiler.printStack$().subscribe(errorHandler);
-            } else {
-                broiler.printStack().then(null, onError);
-            }
+        handler: (argv: CommandOptions) => {
+            const broiler = getBroiler(argv);
+            broiler.printStack().then(null, onError);
         },
     })
     .command({
         command: 'serve [stage]',
         describe: 'Run the local development server.',
         builder: (cmdYargs) => cmdYargs.default('stage', 'local'),
-        handler: (argv: ICommandOptions) => {
-            const config = readConfig(argv);
-            const broiler = getBroiler(config);
-            if ('serve$' in broiler) {
-                broiler.serve$().subscribe(errorHandler);
-            } else {
-                broiler.serve().then(null, onError);
-            }
+        handler: (argv: CommandOptions) => {
+            const broiler = getBroiler(argv);
+            broiler.serve().then(null, onError);
         },
     })
     .demandCommand(1)
