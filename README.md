@@ -56,7 +56,7 @@ Commands:
   serve [stage]         Run the local development server.
 
 Options:
-  --appConfigPath  Path to the app configuration                 [string] [default: "app.config.ts"]
+  --appConfigPath  Path to the app configuration                        [string] [default: "app.ts"]
   --debug          Compile assets for debugging                                            [boolean]
   --no-color       Print output without colors                                             [boolean]
   --help           Show help                                                               [boolean]
@@ -86,7 +86,7 @@ After bootstrapping your project, you should add the metadata to the `package.js
 
 ## Configuring the app
 
-You should change the configuration in `app.config.ts` according to your web app's needs.
+You should change the configuration in `app.ts` according to your web app's needs.
 
 - `name`: A distinct name of your app. Recommended to be in lower case and separate words with dashes, because the name will be used in Amazon resource names and internal host names.
 - `stages`: Configuration for each different stage that your app has. By default there are `dev` stage for a development version and `prod` stage for the production version. You should change the `siteDomain` and `assetsDomain` to the domain names that you would like to use for each stage. There is also a special stage `local` that is used for the locally run development server.

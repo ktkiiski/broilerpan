@@ -40,7 +40,7 @@ function getBroiler(argv: CommandOptions): any {
 yargs
     // Read the app configuration
     .describe('appConfigPath', 'Path to the app configuration')
-    .default('appConfigPath', 'app.config.ts')
+    .default('appConfigPath', 'app.ts')
     .normalize('appConfigPath')
 
     .boolean('debug')
