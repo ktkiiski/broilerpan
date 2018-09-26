@@ -5,9 +5,6 @@ import * as path from 'path';
 import * as yargs from 'yargs';
 import { escapeForShell } from './exec';
 
-// Allow loading TypeScript (.ts) files using `require()` commands
-import 'ts-node/register';
-
 // Polyfill Symbol.asyncIterator
 (Symbol as any).asyncIterator = (Symbol as any).asyncIterator || Symbol.for('Symbol.asyncIterator');
 
@@ -28,6 +25,10 @@ function getBroiler(argv: CommandOptions): any {
     const cwd = process.cwd();
     const appPath = path.resolve(cwd, appConfigPath);
     const projectRootPath = path.dirname(appPath);
+    // Allow loading TypeScript (.ts) files using `require()` commands
+    const tsNodePath = path.resolve(projectRootPath, './node_modules/ts-node');
+    const tsNode = require(tsNodePath);
+    tsNode.register();
     const appModule = require(appPath);
     const app = appModule.default; // App should be the default export
     const broilerModulePath = path.resolve(projectRootPath, './node_modules/broilerkit/broiler');
