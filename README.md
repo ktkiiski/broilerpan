@@ -1,5 +1,7 @@
 # BroilerPan
 
+**DEPRECATION NOTICE: This project has been integrated to [BroilerKit](https://github.com/ktkiiski/broilerkit.git) in favor of `npx`! Please check out that main project instead!**
+
 **BroilerPan** is a command line interface for **bootstrapping and deploying scalable, production-ready web apps**! It works with projects built with **[BroilerKit](https://github.com/ktkiiski/broilerkit.git) framework!**
 
 The command line interface includes commands to deploy your web app to [Amazon Web Services cloud platform](https://aws.amazon.com/), with minimal setup and very low costs! The hosting is almost free (but not completely free) on low-traffic sites.
